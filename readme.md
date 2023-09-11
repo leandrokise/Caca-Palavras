@@ -3,7 +3,6 @@
 ## Equipe
 
 - **Nome**: Leandro Oliveira do Nascimento
-- **Nome**: Lucas Xavier Paire
 - **Turma**: LAB. PROGRAMACAO 2023/2
 
 ## Descrição do Projeto
