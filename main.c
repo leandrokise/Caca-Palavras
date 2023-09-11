@@ -1,7 +1,7 @@
+#include "mat.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "mat.h"
 
 #define horiz_direta 0
 #define horiz_reversa 1
@@ -36,10 +36,7 @@ char *aloca_vetor(int linhas)
     return vetor;
 }
 
-void libera_vetor(char *vetor)
-{
-    free(vetor);
-}
+void libera_vetor(char *vetor) { free(vetor); }
 
 void inversao(matriz *informacoes_jogo, Procura *busca, int i)
 {
@@ -113,15 +110,25 @@ void procurar_matriz(matriz *mat, Procura *busca)
     char *achou;
     for (i = 0; i < mat->linhas; i++)
     {
+        if (busca->encontradas == 9)
+        {
+            break;
+        }
         achou = strstr(mat->matriz[i], busca->string);
         if (achou != NULL)
         {
             int indice = busca->encontradas;
-            busca->inicio.linha[indice] = i;
-            busca->inicio.coluna[indice] = achou - mat->matriz[i];
-            busca->fim.linha[indice] = i;
-            busca->fim.coluna[indice] = achou - mat->matriz[i] + strlen(busca->string) - 1;
-            busca->encontradas++;
+            int coluna_inicial = achou - mat->matriz[i];
+            int coluna_final = coluna_inicial + strlen(busca->string) - 1;
+
+            if (coluna_inicial >= 0 && coluna_final < mat->colunas)
+            {
+                busca->inicio.linha[indice] = i;
+                busca->inicio.coluna[indice] = coluna_inicial;
+                busca->fim.linha[indice] = i;
+                busca->fim.coluna[indice] = coluna_final;
+                busca->encontradas++;
+            }
         }
     }
 }
@@ -173,7 +180,7 @@ void verifica_vert(matriz *informacoes_jogo, Procura *busca)
 
     mat_linhas_por_colunas(informacoes_jogo);
 }
-//
+
 void verifica_vert_inv(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
@@ -201,13 +208,18 @@ void procurar_diag(matriz *informacoes_jogo, Procura *busca)
     {
         for (int coluna = 0; coluna < informacoes_jogo->colunas; coluna++)
         {
+            if (busca->encontradas == 9)
+            {
+                break;
+            }
             int i = 0;
             int linha_atual = linha;
             int coluna_atual = coluna;
             while (i < strlen(busca->string) &&
                    linha_atual < informacoes_jogo->linhas &&
                    coluna_atual < informacoes_jogo->colunas &&
-                   informacoes_jogo->matriz[linha_atual][coluna_atual] == busca->string[i])
+                   informacoes_jogo->matriz[linha_atual][coluna_atual] ==
+                       busca->string[i])
             {
                 i++;
                 linha_atual++;
@@ -294,7 +306,6 @@ void buscar_direcoes(matriz *informacoes_jogo, Procura *busca)
     verifica_horiz_inv(informacoes_jogo, busca);
     verifica_vert(informacoes_jogo, busca);
     verifica_vert_inv(informacoes_jogo, busca);
-
     verifica_diag(informacoes_jogo, busca);
     verifica_diag_sec(informacoes_jogo, busca);
     verifica_diag_inv(informacoes_jogo, busca);
@@ -307,7 +318,10 @@ void mostra_posicoes_encontradas(matriz *informacoes_jogo, Procura *busca)
         printf("Foram encontradas a palavra %s\n", busca->string);
         for (int i = 0; i < busca->encontradas; i++)
         {
-            printf("iniciando nas coordenadas: [%d,%d] e terminando nas coordenadas: [%d,%d] ", busca->inicio.linha[i] + 1, busca->inicio.coluna[i] + 1, busca->fim.linha[i] + 1, busca->fim.coluna[i] + 1);
+            printf("iniciando nas coordenadas: [%d,%d] e terminando nas coordenadas: "
+                   "[%d,%d] ",
+                   busca->inicio.linha[i] + 1, busca->inicio.coluna[i] + 1,
+                   busca->fim.linha[i] + 1, busca->fim.coluna[i] + 1);
             printf("na direcao %s\n", direcao(busca->direcao, i));
         }
     }
@@ -317,6 +331,7 @@ void buscar_matriz(matriz *informacoes_jogo)
 {
     Procura buscar = {0};
     buscar.string = aloca_vetor(informacoes_jogo->linhas + informacoes_jogo->colunas);
+    printf("DIGITE SUA PALAVRA | DIGITE \"close\" PARA SAIR\n");
     do
     {
         scanf("%s", buscar.string);
