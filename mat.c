@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "mat.h"
 
-char *mat_aloca_matvet(int linhas, int colunas)
+char *mat_aloca_matriz_por_vetor(int linhas, int colunas)
 {
     char *mat;
     mat = (char *)malloc(linhas * colunas * sizeof(char *));
@@ -116,7 +116,7 @@ void mat_inicializa(matriz *mat)
     }
 }
 
-void mat_linhas_por_colunas(matriz *mat)
+void mat_troca_linhas_por_colunas(matriz *mat)
 {
     matriz aux;
     aux.matriz = mat_aloca(mat->colunas, mat->linhas);

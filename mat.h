@@ -12,7 +12,7 @@ struct matriz
 
 typedef struct matriz matriz;
 
-char *mat_aloca_matvet(int m, int n);
+char *mat_aloca_matriz_por_vetor(int m, int n);
 
 void mat_dimencoes(matriz *mat);
 
@@ -28,7 +28,7 @@ void mat_inicializa(matriz *mat);
 
 void mat_inverte(matriz *mat);
 
-void mat_linhas_por_colunas(matriz *mat);
+void mat_troca_linhas_por_colunas(matriz *mat);
 
 void mat_troca_linhas(matriz *informacoes_jogo);
 #endif

@@ -38,7 +38,7 @@ char *aloca_vetor(int linhas)
 
 void libera_vetor(char *vetor) { free(vetor); }
 
-void inversao(matriz *informacoes_jogo, Procura *busca, int i)
+void inverte_coordenadas(matriz *informacoes_jogo, Procura *busca, int i)
 {
     int coluna = busca->inicio.coluna[i];
     int coluna_final = busca->fim.coluna[i];
@@ -46,7 +46,7 @@ void inversao(matriz *informacoes_jogo, Procura *busca, int i)
     busca->fim.coluna[i] = informacoes_jogo->colunas - coluna_final - 1;
 }
 
-void troca_linhas(matriz *informacoes_jogo, Procura *busca, int i)
+void troca_linhas_coordenadas(matriz *informacoes_jogo, Procura *busca, int i)
 {
     int linhas = busca->inicio.linha[i];
     int linha_final = busca->fim.linha[i];
@@ -55,7 +55,7 @@ void troca_linhas(matriz *informacoes_jogo, Procura *busca, int i)
     busca->fim.linha[i] = informacoes_jogo->linhas - linha_final - 1;
 }
 
-void linhas_colunas(Procura *busca, int i)
+void troca_linhas_por_colunas_coordenadas(Procura *busca, int i)
 {
     int aux;
     int aux2;
@@ -133,7 +133,7 @@ void procurar_matriz(matriz *mat, Procura *busca)
     }
 }
 
-void verifica_horiz(matriz *informacoes_jogo, Procura *busca)
+void verifica_horiz_direta(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
     procurar_matriz(informacoes_jogo, busca);
@@ -146,7 +146,7 @@ void verifica_horiz(matriz *informacoes_jogo, Procura *busca)
     }
 }
 
-void verifica_horiz_inv(matriz *informacoes_jogo, Procura *busca)
+void verifica_horiz_reversa(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
     mat_inverte(informacoes_jogo);
@@ -156,50 +156,50 @@ void verifica_horiz_inv(matriz *informacoes_jogo, Procura *busca)
     {
         for (int i = verif_encontro; i < busca->encontradas; i++)
         {
-            inversao(informacoes_jogo, busca, i);
+            inverte_coordenadas(informacoes_jogo, busca, i);
             busca->direcao[i] = horiz_reversa;
         }
     }
     mat_inverte(informacoes_jogo);
 }
 
-void verifica_vert(matriz *informacoes_jogo, Procura *busca)
+void verifica_vert_direta(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
 
-    mat_linhas_por_colunas(informacoes_jogo);
+    mat_troca_linhas_por_colunas(informacoes_jogo);
     procurar_matriz(informacoes_jogo, busca);
     if (verif_encontro != busca->encontradas && busca->encontradas < 10)
     {
         for (int i = verif_encontro; i < busca->encontradas; i++)
         {
-            linhas_colunas(busca, i);
+            troca_linhas_por_colunas_coordenadas(busca, i);
             busca->direcao[i] = vert_direta;
         }
     }
 
-    mat_linhas_por_colunas(informacoes_jogo);
+    mat_troca_linhas_por_colunas(informacoes_jogo);
 }
 
-void verifica_vert_inv(matriz *informacoes_jogo, Procura *busca)
+void verifica_vert_reversa(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
 
-    mat_linhas_por_colunas(informacoes_jogo);
+    mat_troca_linhas_por_colunas(informacoes_jogo);
     mat_inverte(informacoes_jogo);
     procurar_matriz(informacoes_jogo, busca);
     if (verif_encontro != busca->encontradas && busca->encontradas < 10)
     {
         for (int i = verif_encontro; i < busca->encontradas; i++)
         {
-            inversao(informacoes_jogo, busca, i);
-            linhas_colunas(busca, i);
+            inverte_coordenadas(informacoes_jogo, busca, i);
+            troca_linhas_por_colunas_coordenadas(busca, i);
             busca->direcao[i] = vert_reversa;
         }
     }
 
     mat_inverte(informacoes_jogo);
-    mat_linhas_por_colunas(informacoes_jogo);
+    mat_troca_linhas_por_colunas(informacoes_jogo);
 }
 
 void procurar_diag(matriz *informacoes_jogo, Procura *busca)
@@ -236,7 +236,7 @@ void procurar_diag(matriz *informacoes_jogo, Procura *busca)
         }
     }
 }
-void verifica_diag(matriz *informacoes_jogo, Procura *busca)
+void verifica_diag_direta(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
     procurar_diag(informacoes_jogo, busca);
@@ -257,14 +257,14 @@ void verifica_diag_sec(matriz *informacoes_jogo, Procura *busca)
     {
         for (int i = verif_encontro; i < busca->encontradas; i++)
         {
-            inversao(informacoes_jogo, busca, i);
+            inverte_coordenadas(informacoes_jogo, busca, i);
             busca->direcao[i] = diag_sec;
         }
     }
 
     mat_inverte(informacoes_jogo);
 }
-void verifica_diag_inv(matriz *informacoes_jogo, Procura *busca)
+void verifica_diag_reversa(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
     mat_troca_linhas(informacoes_jogo);
@@ -273,14 +273,14 @@ void verifica_diag_inv(matriz *informacoes_jogo, Procura *busca)
     {
         for (int i = verif_encontro; i < busca->encontradas; i++)
         {
-            troca_linhas(informacoes_jogo, busca, i);
+            troca_linhas_coordenadas(informacoes_jogo, busca, i);
             busca->direcao[i] = diag_reversa;
         }
     }
     mat_troca_linhas(informacoes_jogo);
 }
 
-void verifica_diag_inv_sec(matriz *informacoes_jogo, Procura *busca)
+void verifica_diag_sec_reversa(matriz *informacoes_jogo, Procura *busca)
 {
     int verif_encontro = busca->encontradas;
     mat_inverte(informacoes_jogo);
@@ -290,8 +290,8 @@ void verifica_diag_inv_sec(matriz *informacoes_jogo, Procura *busca)
     {
         for (int i = verif_encontro; i < busca->encontradas; i++)
         {
-            troca_linhas(informacoes_jogo, busca, i);
-            inversao(informacoes_jogo, busca, i);
+            troca_linhas_coordenadas(informacoes_jogo, busca, i);
+            inverte_coordenadas(informacoes_jogo, busca, i);
             busca->direcao[i] = diag_sec_reversa;
         }
     }
@@ -302,14 +302,14 @@ void verifica_diag_inv_sec(matriz *informacoes_jogo, Procura *busca)
 void buscar_direcoes(matriz *informacoes_jogo, Procura *busca)
 {
     busca->encontradas = 0;
-    verifica_horiz(informacoes_jogo, busca);
-    verifica_horiz_inv(informacoes_jogo, busca);
-    verifica_vert(informacoes_jogo, busca);
-    verifica_vert_inv(informacoes_jogo, busca);
-    verifica_diag(informacoes_jogo, busca);
+    verifica_horiz_direta(informacoes_jogo, busca);
+    verifica_horiz_reversa(informacoes_jogo, busca);
+    verifica_vert_direta(informacoes_jogo, busca);
+    verifica_vert_reversa(informacoes_jogo, busca);
+    verifica_diag_direta(informacoes_jogo, busca);
     verifica_diag_sec(informacoes_jogo, busca);
-    verifica_diag_inv(informacoes_jogo, busca);
-    verifica_diag_inv_sec(informacoes_jogo, busca);
+    verifica_diag_reversa(informacoes_jogo, busca);
+    verifica_diag_sec_reversa(informacoes_jogo, busca);
 }
 void mostra_posicoes_encontradas(matriz *informacoes_jogo, Procura *busca)
 {
