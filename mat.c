@@ -66,7 +66,7 @@ void mat_preenche(matriz *mat)
 {
     int i, j;
     char letra;
-    printf("DIGITE O SEU TEXTO DE CAÇA PALAVRAS:\n");
+    printf("DIGITE O SEU TEXTO DE CACA PALAVRAS:\n");
     for (i = 0; i < mat->linhas; i++)
     {
         for (j = 0; j < mat->colunas;)
